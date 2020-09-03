@@ -24,7 +24,7 @@ public class PortalConfig extends RefreshableConfig {
 
   private static final Logger logger = LoggerFactory.getLogger(PortalConfig.class);
 
-  private Gson gson = new Gson();
+  private static final Gson GSON = new Gson();
   private static final Type ORGANIZATION = new TypeToken<List<Organization>>() {
   }.getType();
 
@@ -73,7 +73,7 @@ public class PortalConfig extends RefreshableConfig {
     Map<String, String> map = Collections.emptyMap();
     try {
       // try to parse
-      map = gson.fromJson(jsonContent, META_SERVERS);
+      map = GSON.fromJson(jsonContent, META_SERVERS);
     } catch (Exception e) {
       logger.error("Wrong format for: {}", key, e);
     }
@@ -144,7 +144,7 @@ public class PortalConfig extends RefreshableConfig {
   public List<Organization> organizations() {
 
     String organizations = getValue("organizations");
-    return organizations == null ? Collections.emptyList() : gson.fromJson(organizations, ORGANIZATION);
+    return organizations == null ? Collections.emptyList() : GSON.fromJson(organizations, ORGANIZATION);
   }
 
   public String portalAddress() {
@@ -221,6 +221,10 @@ public class PortalConfig extends RefreshableConfig {
 
   public boolean isManageAppMasterPermissionEnabled() {
     return getBooleanProperty(SystemRoleManagerService.MANAGE_APP_MASTER_LIMIT_SWITCH_KEY, false);
+  }
+
+  public String getAdminServiceAccessTokens() {
+    return getValue("admin-service.access.tokens");
   }
 
   /***
